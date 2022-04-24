@@ -3,7 +3,7 @@
 return [
     'base_currency' => 'EUR',
     'cloud_currency_rates' => false,
-    'paysera_exchange_api_url' => "https://developers.paysera.com/tasks/api/currency-exchange-rates",
+    'online_exchange_api_url' => "https://developers.paysera.com/tasks/api/currency-exchange-rates",
     'offline_exchange_rates' => [
         'EUR' => 1,
         'USD' => 1.1497,

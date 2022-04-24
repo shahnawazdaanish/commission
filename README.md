@@ -15,6 +15,9 @@ for given inputs.
 - Required configurations are set.
 
 ### Run Process
+
+- Install composer. if you don't have
+- Run `composer install`  
 - Run following script `php script.php input.csv`, it will output the results in console
 - It can calculate commission based on Static Rates set in config or can fetch rates from cloud.
 - For running tests, use `./test/Service/CommissionServiceTest`

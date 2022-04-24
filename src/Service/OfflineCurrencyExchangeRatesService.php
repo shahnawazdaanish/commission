@@ -4,19 +4,9 @@ namespace Dove\Commission\Service;
 
 use Dove\Commission\Utility\Helpers;
 
-class PayseraCurrencyExchangeRatesApi implements RateConverterInterface
+class OfflineCurrencyExchangeRatesService implements RateConverterInterface
 {
     use Helpers;
-
-    private $apiUrl;
-
-    public function __construct()
-    {
-        $this->apiUrl = self::config("app.paysera_exchange_api_url");
-        if (!$this->apiUrl) {
-            throw new \RuntimeException("Paysera Api URL for exchange rates is missing in config");
-        }
-    }
 
     /**
      * @param $fromCurrency
@@ -44,11 +34,8 @@ class PayseraCurrencyExchangeRatesApi implements RateConverterInterface
      * */
     private function getRates(): array
     {
-        $rates = json_decode(@file_get_contents($this->apiUrl), true);
-        if ($rates) {
-            return $rates['rates'] ?? [];
-        }
-        return [];
+        $rates = self::config("app.offline_exchange_rates");
+        return $rates ?? [];
     }
 
     /**

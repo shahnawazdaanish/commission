@@ -3,8 +3,8 @@
 namespace Dove\Commission\Utility;
 
 use DateTime;
-use Dove\Commission\Service\OfflineCurrencyExchangeRates;
-use Dove\Commission\Service\PayseraCurrencyExchangeRatesApi;
+use Dove\Commission\Service\OfflineCurrencyExchangeRatesService;
+use Dove\Commission\Service\OnlineCurrencyExchangeRatesApiService;
 
 class Utils
 {
@@ -19,8 +19,8 @@ class Utils
     {
         $baseCurrency = self::config("app.base_currency");
         $cloudCurrencyChecking = self::config("app.cloud_currency_rates");
-        $payseraCurrencyConverter = new PayseraCurrencyExchangeRatesApi();
-        $offlineCurrencyConverter = new OfflineCurrencyExchangeRates();
+        $payseraCurrencyConverter = new OnlineCurrencyExchangeRatesApiService();
+        $offlineCurrencyConverter = new OfflineCurrencyExchangeRatesService();
 
         if ($toBase) {
             $fromCurrency = $currency;

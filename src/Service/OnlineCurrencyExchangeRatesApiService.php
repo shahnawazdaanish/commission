@@ -4,9 +4,19 @@ namespace Dove\Commission\Service;
 
 use Dove\Commission\Utility\Helpers;
 
-class OfflineCurrencyExchangeRates implements RateConverterInterface
+class OnlineCurrencyExchangeRatesApiService implements RateConverterInterface
 {
     use Helpers;
+
+    private $apiUrl;
+
+    public function __construct()
+    {
+        $this->apiUrl = self::config("app.online_exchange_api_url");
+        if (!$this->apiUrl) {
+            throw new \RuntimeException("Online Api URL for exchange rates is missing in config");
+        }
+    }
 
     /**
      * @param $fromCurrency
@@ -34,8 +44,11 @@ class OfflineCurrencyExchangeRates implements RateConverterInterface
      * */
     private function getRates(): array
     {
-        $rates = self::config("app.offline_exchange_rates");
-        return $rates ?? [];
+        $rates = json_decode(@file_get_contents($this->apiUrl), true);
+        if ($rates) {
+            return $rates['rates'] ?? [];
+        }
+        return [];
     }
 
     /**
