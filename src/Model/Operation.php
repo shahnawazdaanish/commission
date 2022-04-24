@@ -3,8 +3,6 @@
 namespace Dove\Commission\Model;
 
 use DateTime;
-use Dove\Commission\Model\Currency\EUR;
-use Dove\Commission\Service\RateConverterService;
 
 /**
  * Class Operation
@@ -12,17 +10,25 @@ use Dove\Commission\Service\RateConverterService;
  */
 class Operation
 {
-    const NAME_SPACE_PREFIX = 'Dove\Commission\Model\\';
-    const CLIENT_PATH = self::NAME_SPACE_PREFIX . 'Client\\';
-    const ACTION_TYPE_PATH = self::NAME_SPACE_PREFIX . 'ActionType\\';
-    const CURRENCY_PATH = self::NAME_SPACE_PREFIX . 'Currency\\';
-
     private $operationAt;
-    private $userID;
-    private $userType;
-    private $type;
+    private $clientID;
+    private $clientType;
+    private $operationType;
     private $amount;
     private $currency;
+
+    private $fee;
+
+    public function __construct(array $rawOperation = array())
+    {
+        $this->setOperationAt($rawOperation[0] ?? '');
+        $this->setClientID($rawOperation[1] ?? '');
+        $this->setClientType($rawOperation[2] ?? '');
+        $this->setOperationType($rawOperation[3] ?? '');
+        $this->setAmount($rawOperation[4] ?? '');
+        $this->setCurrency($rawOperation[5] ?? '');
+    }
+
 
     /**
      * @return DateTime
@@ -43,34 +49,23 @@ class Operation
     /**
      * @return int
      */
-    public function getUserID(): int
+    public function getClientID(): int
     {
-        return $this->userID;
+        return $this->clientID;
     }
 
     /**
-     * @param int $userID
+     * @param int $clientID
      */
-    public function setUserID(int $userID)
+    public function setClientID(int $clientID)
     {
-        $this->userID = $userID;
-    }
-
-    public function getCurrencyAmountInEuro(): float
-    {
-        $isCurrentCurrencyInEuro = $this->getCurrency() instanceof EUR;
-
-        if ($isCurrentCurrencyInEuro) {
-            return $this->getAmount();
-        }
-
-        return RateConverterService::convert($this->getCurrency(), new EUR(), $this->getAmount());
+        $this->clientID = $clientID;
     }
 
     /**
-     * @return CurrencyInterface
+     * @return mixed
      */
-    public function getCurrency(): CurrencyInterface
+    public function getCurrency()
     {
         return $this->currency;
     }
@@ -80,8 +75,7 @@ class Operation
      */
     public function setCurrency(string $currency)
     {
-        $currencyClass = self::CURRENCY_PATH . ucwords($currency);
-        $this->currency = new $currencyClass();
+        $this->currency = $currency;
     }
 
     /**
@@ -100,44 +94,45 @@ class Operation
         $this->amount = (double)$amount;
     }
 
-    public function chainLinkage()
+    /**
+     * @return string
+     */
+    public function getOperationType(): string
     {
-        $this->getType()->setClientType($this->getUserType());
+        return $this->operationType;
     }
 
     /**
-     * @return ActionTypeInterface
+     * @param string $operationType
      */
-    public function getType(): ActionTypeInterface
+    public function setOperationType(string $operationType = null)
     {
-        return $this->type;
+        $this->operationType = $operationType;
     }
 
     /**
-     * @param string $type
+     * @return string
      */
-    public function setType(string $type = null)
+    public function getClientType(): string
     {
-        $typeClass = self::ACTION_TYPE_PATH . ucwords($type);
-        $this->type = new $typeClass($this);
+        return $this->clientType;
     }
 
     /**
-     * @return ClientInterface
+     * @param string $clientType
      */
-    public function getUserType(): ClientInterface
+    public function setClientType(string $clientType)
     {
-        return $this->userType;
+        $this->clientType = $clientType;
     }
 
-    /**
-     * @param string $userType
-     */
-    public function setUserType(string $userType)
+    public function getFee()
     {
-        $clientClass = self::CLIENT_PATH . ucwords($userType) . 'Client';
-        $this->userType = new $clientClass();
+        return $this->fee;
     }
 
-
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
+    }
 }

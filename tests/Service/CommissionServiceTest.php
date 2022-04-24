@@ -2,28 +2,29 @@
 
 namespace Dove\Commission\Tests\Service;
 
+use Dove\Commission\Model\Operation;
 use Dove\Commission\Service\CommissionService;
-use Dove\Commission\Utility\ApplicationUtility;
 use PHPUnit\Framework\TestCase;
 
 class CommissionServiceTest extends TestCase
 {
-    private $memory = [];
 
-    /**
-     * @return array
-     */
-    public function testCommissionOne(): array
+    public function testCommissionOne()
     {
-        $input = '2014-12-31,4,private,withdraw,1200.00,EUR';
-        $expectedOutput = '0.60';
+        $operations = [
+            new Operation(['2014-12-31', 4, 'private', 'withdraw', 1200.00, 'EUR']),
+            new Operation(['2015-01-01', 4, 'private', 'withdraw', 1000.00, 'EUR'])
+        ];
+        $expectedOutput = [
+            '0.60',
+            '3.00'
+        ];
 
-        $stringToOperation = ApplicationUtility::readSingleLineToOperation($input);
-        $commissionService = new CommissionService();
-        $output = $commissionService->calculateOperations($this->memory, $stringToOperation);
-        if (isset($output[0])) {
-            self::assertSame($expectedOutput, $output[0]);
+        $commissionService = new CommissionService($operations);
+        $updatedOperation = $commissionService->processOperations();
+
+        foreach ($updatedOperation as $index => $operation) {
+            self::assertSame($expectedOutput[$index], $operation->getFee());
         }
-        return $this->memory;
     }
 }

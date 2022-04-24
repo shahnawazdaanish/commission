@@ -2,30 +2,34 @@
 
 require_once "./vendor/autoload.php";
 
+use Dove\Commission\Parser\CsvParser;
 use Dove\Commission\Service\CommissionService;
-use Dove\Commission\Utility\ApplicationUtility;
 
 
-/*
- * Get file name argument from CLI
- */
-$file_name = isset($argv) && is_array($argv) && !empty($argv[1]) ? $argv[1] : null;
-
-if (!$file_name) {
+/**
+ * Get File Name
+ * */
+$fileName = isset($argv) && is_array($argv) && !empty($argv[1]) ? $argv[1] : null;
+if (!$fileName) {
     throw new \RuntimeException("File name is not present or invalid");
 }
 
-try {
-    $memory = [];
-    $operations = ApplicationUtility::readCsvToArrayOfOperations($file_name);
+/**
+ * Extract Operations
+ */
+$inputOperations = [];
+if (strpos($fileName, ".csv") !== false) {
+    $csvParser = new CsvParser();
+    $inputOperations = $csvParser->getOperations($fileName);
+} else {
+    throw new \RuntimeException("File format is not supported");
+}
+/**
+ * Calculate Commission
+ */
+$commissionService = new CommissionService($inputOperations);
+$updatedOperations = $commissionService->processOperations();
 
-    $commissionService = new CommissionService();
-    $results = $commissionService->calculateOperations($memory, ...$operations);
-
-    foreach ($results as $result) {
-        echo $result . "\n";
-    }
-} catch (Exception $exception) {
-    echo $exception->getMessage();
-    die();
+foreach ($updatedOperations as $operation) {
+    echo $operation->getFee() . "\n";
 }

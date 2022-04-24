@@ -1,33 +1,39 @@
 {
-    "name": "dove/commission",
-    "description": "Commission calculator for deposit or withdraw money from account",
-    "keywords": [],
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "Dove\\Commission\\": "src"
-        }
+  "name": "dove/commission",
+  "description": "Commission calculator for deposit or withdraw money from account",
+  "keywords": [],
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Dove\\Commission\\": "src"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Dove\\Commission\\Tests\\": "tests"
-        }
-    },
-    "require": {
-        "php": ">=7.0",
-        "ext-bcmath": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^6.5"
-    },
-    "config": {
-        "sort-packages": true,
-        "bin-dir": "bin"
-    },
-    "scripts": {
-        "phpunit": "phpunit",
-        "fix-cs": "php-cs-fixer fix",
-        "test-cs": "php-cs-fixer fix --dry-run -v",
-        "test": ["@phpunit"]
+    "files": [
+      "src/Utility/Helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Dove\\Commission\\Tests\\": "tests"
     }
+  },
+  "require": {
+    "php": ">=7.0",
+    "ext-bcmath": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.5"
+  },
+  "config": {
+    "sort-packages": true,
+    "bin-dir": "bin"
+  },
+  "scripts": {
+    "phpunit": "phpunit",
+    "fix-cs": "php-cs-fixer fix",
+    "test-cs": "php-cs-fixer fix --dry-run -v",
+    "test": [
+      "@phpunit"
+    ]
+  }
 }

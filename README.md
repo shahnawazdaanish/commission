@@ -1,6 +1,8 @@
 # Commission Task (Dove)
-***Process***: Using input.csv file, parsing all rows and converting it to list Operation Class.
-Using reference of a variable processing all commission rate based on configuration. Added custom charge rule for processing special rates.
+***Process***: 
+This application parses a csv file and converts all given inputs as Operations. 
+Based on configuration set in `./src/Config/app.php`, it calculates commission fee
+for given inputs.
 
 ### Environment Information
 - PHP 7.0
@@ -10,10 +12,10 @@ Using reference of a variable processing all commission rate based on configurat
 ### Pre-requisites
 - PhpUnit is installed and ready.
 - Ensure that input.csv with proper formatted data is present at root.
-- All required currencies are added to <code>Model\Currency</code>.
+- Required configurations are set.
 
 ### Run Process
-- Run following script <code>php script.php input.csv</code>, it will output the results in console
-- For configuring rates, <code>Config/Rate.php</code> file is present to reconfigure
-- Special rate rule for private withdraw operation is available to be configured at <code>Model\ChargeRule\PrivateWithdrawRule.php</code>.
-- For running tests, use <code>phpunit</code>
+- Run following script `php script.php input.csv`, it will output the results in console
+- It can calculate commission based on Static Rates set in config or can fetch rates from cloud.
+- For running tests, use `./test/Service/CommissionServiceTest`
+  file with <code>phpunit</code>
